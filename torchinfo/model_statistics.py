@@ -47,6 +47,7 @@ class ModelStatistics:
                 self.total_params += max(leftover_params, 0)
                 self.trainable_params += max(leftover_trainable_params, 0)
         self.formatting.set_layer_name_width(summary_list)
+        self.layers_table = self.formatting.layers_to_table(self.summary_list, self.total_params)
 
     def __repr__(self) -> str:
         """Print results of the summary."""

@@ -49,6 +49,7 @@ class FormattingOptions:
         self.hide_recursive_layers = (
             RowSettings.HIDE_RECURSIVE_LAYERS in self.row_settings
         )
+        self.remove_layer_list = ['Sequential', 'Bottleneck', 'Bottle2neck', 'Bottle2neckX', 'Root', 'CNBlock', 'ModuleList', 'Tree']
 
     @staticmethod
     def str_(val: Any) -> str:
@@ -143,3 +144,51 @@ class FormattingOptions:
                 layer_info, reached_max_depth, total_params
             )
         return new_str
+
+    def header_list(self) -> list[str]:
+        layer_header = ""
+        if self.show_var_name:
+            layer_header += " (var_name)"
+        if self.show_depth:
+            layer_header += ":depth-idx"
+        return [f"Layer (type{layer_header})"] + list(HEADER_TITLES.values())
+
+    def format_info_to_list(self, layer_name: str, row_values: dict[ColumnSettings, str]) -> str:
+        new_line = [layer_name] + list(row_values.values())
+        return new_line
+
+    def layer_info_to_list(
+        self, layer_info: LayerInfo, reached_max_depth: bool, total_params: int
+    ) -> list[[str]]:
+        values_for_row = {
+            ColumnSettings.KERNEL_SIZE: self.str_(layer_info.kernel_size),
+            ColumnSettings.INPUT_SIZE: self.str_(layer_info.input_size),
+            ColumnSettings.OUTPUT_SIZE: self.str_(layer_info.output_size),
+            ColumnSettings.NUM_PARAMS: layer_info.num_params_to_str(reached_max_depth),
+            ColumnSettings.PARAMS_PERCENT: layer_info.params_percent(
+                total_params, reached_max_depth
+            ),
+            ColumnSettings.MULT_ADDS: layer_info.macs_to_str(reached_max_depth),
+            ColumnSettings.TRAINABLE: self.str_(layer_info.trainable),
+        }
+        layer_name = layer_info.get_layer_name(show_var_name=False, show_depth=False)
+        new_line = [self.format_info_to_list(f"{layer_name}", values_for_row)]
+
+        return new_line
+
+    def layers_to_table(self, summary_list: list[LayerInfo], total_params: int) -> list[[str]]:
+        new_table = [self.header_list()]
+        for layer_id, layer_info in enumerate(summary_list):
+            if (
+                layer_info.depth > self.max_depth
+                or self.hide_recursive_layers
+                and layer_info.is_recursive
+                or (layer_id == 0)
+            ):
+                continue
+
+            reached_max_depth = layer_info.depth == self.max_depth
+            layer_info_list = self.layer_info_to_list(layer_info, reached_max_depth, total_params)
+            for layer_info in layer_info_list:
+                new_table.append(layer_info)
+        return new_table
