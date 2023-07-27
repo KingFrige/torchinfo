@@ -28,6 +28,7 @@ class ColumnSettings(str, Enum):
     KERNEL_SIZE = "kernel_size"
     INPUT_SIZE = "input_size"
     OUTPUT_SIZE = "output_size"
+    FILTER_SIZE = "filter_size"
     NUM_PARAMS = "num_params"
     PARAMS_PERCENT = "params_percent"
     MULT_ADDS = "mult_adds"

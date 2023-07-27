@@ -10,6 +10,7 @@ HEADER_TITLES = {
     ColumnSettings.KERNEL_SIZE: "Kernel Shape",
     ColumnSettings.INPUT_SIZE: "Input Shape",
     ColumnSettings.OUTPUT_SIZE: "Output Shape",
+    ColumnSettings.FILTER_SIZE: "Filter Shape",
     ColumnSettings.NUM_PARAMS: "Param #",
     ColumnSettings.PARAMS_PERCENT: "Param %",
     ColumnSettings.MULT_ADDS: "Mult-Adds",
@@ -108,6 +109,7 @@ class FormattingOptions:
             ColumnSettings.KERNEL_SIZE: self.str_(layer_info.kernel_size),
             ColumnSettings.INPUT_SIZE: self.str_(layer_info.input_size),
             ColumnSettings.OUTPUT_SIZE: self.str_(layer_info.output_size),
+            ColumnSettings.FILTER_SIZE: self.str_(layer_info.filter_size),
             ColumnSettings.NUM_PARAMS: layer_info.num_params_to_str(reached_max_depth),
             ColumnSettings.PARAMS_PERCENT: layer_info.params_percent(
                 total_params, reached_max_depth
@@ -164,6 +166,7 @@ class FormattingOptions:
             ColumnSettings.KERNEL_SIZE: self.str_(layer_info.kernel_size),
             ColumnSettings.INPUT_SIZE: self.str_(layer_info.input_size),
             ColumnSettings.OUTPUT_SIZE: self.str_(layer_info.output_size),
+            ColumnSettings.FILTER_SIZE: self.str_(layer_info.filter_size),
             ColumnSettings.NUM_PARAMS: layer_info.num_params_to_str(reached_max_depth),
             ColumnSettings.PARAMS_PERCENT: layer_info.params_percent(
                 total_params, reached_max_depth

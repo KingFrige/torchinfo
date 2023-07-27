@@ -43,6 +43,7 @@ DEFAULT_ROW_SETTINGS = {RowSettings.DEPTH}
 REQUIRES_INPUT = {
     ColumnSettings.INPUT_SIZE,
     ColumnSettings.OUTPUT_SIZE,
+    ColumnSettings.FILTER_SIZE,
     ColumnSettings.MULT_ADDS,
 }
 
@@ -120,6 +121,7 @@ def summary(
                 Specify which columns to show in the output. Currently supported: (
                     "input_size",
                     "output_size",
+                    "filter_size",
                     "num_params",
                     "params_percent",
                     "kernel_size",
@@ -594,6 +596,7 @@ def construct_hook(
             info.calculate_num_params()
         info.input_size, _ = info.calculate_size(inputs, batch_dim)
         info.output_size, elem_bytes = info.calculate_size(outputs, batch_dim)
+        info.filter_size = info.get_filter_size(info.input_size, info.output_size)
         info.output_bytes = elem_bytes * prod(info.output_size)
         info.executed = True
         info.calculate_macs()

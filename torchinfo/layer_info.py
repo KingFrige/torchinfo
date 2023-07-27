@@ -57,6 +57,7 @@ class LayerInfo:
         self.input_size: list[int] = []
         self.output_size: list[int] = []
         self.kernel_size = self.get_kernel_size(module)
+        self.filter_size: list[int] = []
         self.trainable_params = 0
         self.num_params = 0
         self.param_bytes = 0
@@ -168,6 +169,16 @@ class LayerInfo:
                 raise TypeError(f"kernel_size has an unexpected type: {type(k)}")
             return kernel_size
         return None
+
+    def get_filter_size(self, input_size, output_size) -> int | list[int] | None:
+        filter_size: int | list[int]
+        if isinstance(self.kernel_size, int):
+           filter_size = int(self.kernel_size)
+        elif isinstance(self.kernel_size, Iterable):
+           filter_size = [output_size[1], input_size[1]] + self.kernel_size
+        else:
+           filter_size = None
+        return filter_size
 
     def get_layer_name(self, show_var_name: bool, show_depth: bool) -> str:
         layer_name = self.class_name
