@@ -175,7 +175,7 @@ class LayerInfo:
         if isinstance(self.kernel_size, int):
            filter_size = int(self.kernel_size)
         elif isinstance(self.kernel_size, Iterable):
-           filter_size = [output_size[1], input_size[1]] + self.kernel_size
+           filter_size = [output_size[1]] + self.kernel_size + [input_size[1]]
         else:
            filter_size = None
         return filter_size
